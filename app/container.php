@@ -16,7 +16,7 @@ $container->share('emitter', Zend\Diactoros\Response\SapiEmitter::class);
 
 $container->share('config', $parsedConfig);
 
-$logLevel = isset($parsedConfig['log_level']) ? $parsedConfig['log_level'] : 'notice';
+$logLevel = isset($parsedConfig['log_level']) ? $parsedConfig['log_level'] : \Psr\Log\LogLevel::NOTICE;
 
 $log = new \Monolog\Logger('ca_signer');
 $log->pushHandler(
