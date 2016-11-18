@@ -1,0 +1,10 @@
+---
+ca_path: /home/ben/ssh_ca/dev_em_auth_unsigned
+
+# optional
+tmp_dir: /tmp
+default_expiry: 1h
+default_login_user: wems
+
+# psr-3 log levels (ala syslog)
+log_level: notice
