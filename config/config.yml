@@ -1,5 +1,5 @@
 ---
-ca_path: /home/ben/work/ssh_ca/dev_em_auth_unsigned
+ca_path: /home/ben/projects/work/ssh_ca/dev_em_auth_unsigned
 
 # optional
 tmp_dir: /tmp
@@ -7,7 +7,7 @@ default_expiry: 1h
 default_login_user: wems
 permissions:
   - "permit-pty"
-  - "force_command=df"
+  - "force-command=df"
 
 # psr-3 log levels (ala syslog)
 log_level: notice
