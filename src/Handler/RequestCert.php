@@ -16,7 +16,7 @@ class RequestCert extends BaseHandler
         // extract data from post
 
         $inputKeyPath = $requestCertParameters->getTmpDir() . '/ssh_id_' . $uniqId . '.pub';
-        $outputSignedFile = $requestCertParameters->getTmpDir() . '/tmp/ssh_id_' . $uniqId . '-cert.pub';
+        $outputSignedFile = $requestCertParameters->getTmpDir() . '/ssh_id_' . $uniqId . '-cert.pub';
 
         /** @var \Zend\Diactoros\UploadedFile $inputKeyFile */
         $uploadedFiles = $this->request->getUploadedFiles();
@@ -50,11 +50,11 @@ class RequestCert extends BaseHandler
 
         $permissions = '';
         foreach ($allowedPermissions as $permission) {
-            $permissions .= ' -O ' . $permission;
+            $permissions .= ' -O "' . $permission . '"';
         }
 
         $command = <<<STR
-    ssh-keygen -V +{$requestCertParameters->getDefaultExpiry()} -s {$requestCertParameters->getCaPath()} -I "$userReference" -O clear $permissions -n $loginAs $inputKeyPath 2>&1
+ssh-keygen -V +{$requestCertParameters->getDefaultExpiry()} -s {$requestCertParameters->getCaPath()} -I "$userReference" -O clear $permissions -n $loginAs $inputKeyPath 2>&1
 STR;
 
         ob_start();
@@ -65,6 +65,13 @@ STR;
 
         // @todo log exit status of command and log the process into an audit trail
         // @todo figure out exactly what we want to capture to the log
+
+        if (!file_exists($outputSignedFile)) {
+            $this->response = $this->response->withStatus(500);
+            $this->response->getBody()->write('Something went wrong creating the cert');
+
+            return $this->response;
+        }
 
         $output = trim(file_get_contents($outputSignedFile));
 
