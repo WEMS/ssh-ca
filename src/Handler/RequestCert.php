@@ -48,8 +48,8 @@ class RequestCert extends BaseHandler
         // @todo figure out exactly what we want to capture to the log
 
         if (!file_exists($this->outputSignedCertPath)) {
-            $this->logger->error('Couldn\'t write a cert. STDOUT: ' . $stdOut);
-            $this->logger->error('Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
+            $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. STDOUT: ' . $stdOut);
+            $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
 
             $this->response = $this->response->withStatus(500);
             $this->response->getBody()->write('Something went wrong creating the cert');
@@ -57,7 +57,7 @@ class RequestCert extends BaseHandler
             return $this->response;
         }
 
-        $this->logger->notice('Created a cert for user ' . $this->getLoginAsUser());
+        $this->logger->notice('Ref [' . $this->uniqueRef . ']. Created a cert for user ' . $this->getLoginAsUser());
 
         $this->response->getBody()->write($this->getSignedCertificate());
 
