@@ -1,0 +1,11 @@
+{
+    "name": "wems/ca-signer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Ben Cromwell",
+            "email": "bencromwell@wems.co.uk"
+        }
+    ],
+    "require": {}
+}
