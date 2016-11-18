@@ -36,16 +36,7 @@ class RequestCert extends BaseHandler
         $parsedBody = $this->request->getParsedBody();
         $loginAs = !empty($parsedBody['user']) ? $parsedBody['user'] : 'wems'; // todo const this as DEFAULT_LOGIN_USER
 
-        $userReference = 'signed by PHP';
-
-        /*
-         * @ref man ssh-keygen
-         *    -O option
-                      Specify a certificate option when signing a key.  This option may be specified multiple times.  Please see the CERTIFICATES section for details.  The options that are valid for user cer‐
-                      tificates are:
-
-         */
-
+        $userReference = $requestCertParameters->getCertificateIdentity();
         $allowedPermissions = $requestCertParameters->getPermissions();
 
         $permissions = '';
@@ -67,6 +58,8 @@ STR;
         // @todo figure out exactly what we want to capture to the log
 
         if (!file_exists($outputSignedFile)) {
+            $this->logger->error('Couldn\'t write a cert. Command was: ' . PHP_EOL . $command);
+
             $this->response = $this->response->withStatus(500);
             $this->response->getBody()->write('Something went wrong creating the cert');
 

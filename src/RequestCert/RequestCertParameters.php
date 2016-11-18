@@ -8,6 +8,7 @@ class RequestCertParameters
     const DEFAULT_LOGIN_USER = 'wems';
     const DEFAULT_EXPIRY = '1h';
     const BASE_PERMISSION = 'permit-pty';
+    const DEFAULT_CERTIFICATE_IDENTITY = 'signed by PHP';
 
     /** @var string */
     private $caPath;
@@ -23,6 +24,9 @@ class RequestCertParameters
 
     /** @var array */
     private $permissions;
+
+    /** @var string */
+    private $certificateIdentity;
 
     /**
      * @param string $caPath
@@ -90,6 +94,10 @@ class RequestCertParameters
     }
 
     /**
+     * @ref man ssh-keygen -O option
+     * Specify a certificate option when signing a key.
+     * This option may be specified multiple times.  Please see the CERTIFICATES section for details.
+     *
      * @param array $permissions
      *
      * @return $this
@@ -97,6 +105,18 @@ class RequestCertParameters
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
+
+        return $this;
+    }
+
+    /**
+     * @param string $certificateIdentity
+     *
+     * @return $this
+     */
+    public function setCertificateIdentity($certificateIdentity)
+    {
+        $this->certificateIdentity = $certificateIdentity;
 
         return $this;
     }
@@ -139,6 +159,14 @@ class RequestCertParameters
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCertificateIdentity()
+    {
+        return $this->certificateIdentity;
     }
 
 }

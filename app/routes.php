@@ -27,6 +27,10 @@ $route->post('/request-cert', function (ServerRequestInterface $request, Respons
         $parameters->setPermissions($config['permissions']);
     }
 
+    if (!empty($config['certificate_identity'])) {
+        $parameters->setCertificateIdentity($config['certificate_identity']);
+    }
+
     $handler->handle($parameters);
 
 });

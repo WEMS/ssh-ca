@@ -8,6 +8,7 @@ default_login_user: wems
 permissions:
   - "permit-pty"
   - "force-command=df"
+certificate_identity: signed by WEMS dev-em CA
 
 # psr-3 log levels (ala syslog)
 log_level: notice
