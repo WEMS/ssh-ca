@@ -33,7 +33,7 @@ class RequestCert extends BaseHandler
 
         if (empty($uploadedFiles[self::POST_PARAM_FILE_KEY])) {
             $this->response = $this->response->withStatus(400);
-            $this->response->getBody()->write('Missing uploaded file under "key"' . PHP_EOL);
+            $this->response->getBody()->write('Missing uploaded file under "' . self::POST_PARAM_FILE_KEY . '"' . PHP_EOL);
 
             return $this->response;
         }
