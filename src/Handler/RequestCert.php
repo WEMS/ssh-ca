@@ -44,9 +44,6 @@ class RequestCert extends BaseHandler
 
         $stdOut = $this->runCommand($command);
 
-        // @todo log exit status of command and log the process into an audit trail
-        // @todo figure out exactly what we want to capture to the log
-
         if (!file_exists($this->outputSignedCertPath)) {
             $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. STDOUT: ' . $stdOut);
             $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
