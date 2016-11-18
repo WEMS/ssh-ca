@@ -7,6 +7,7 @@ class RequestCertParameters
 
     const DEFAULT_LOGIN_USER = 'wems';
     const DEFAULT_EXPIRY = '1h';
+    const BASE_PERMISSION = 'permit-pty';
 
     /** @var string */
     private $caPath;
@@ -20,6 +21,9 @@ class RequestCertParameters
     /** @var string */
     private $defaultLoginUser;
 
+    /** @var array */
+    private $permissions;
+
     /**
      * @param string $caPath
      */
@@ -29,6 +33,7 @@ class RequestCertParameters
         $this->setTmpDir(sys_get_temp_dir());
         $this->setDefaultLoginUser(self::DEFAULT_LOGIN_USER);
         $this->setDefaultExpiry(self::DEFAULT_EXPIRY);
+        $this->setPermissions([self::BASE_PERMISSION]);
     }
 
     /**
@@ -85,6 +90,18 @@ class RequestCertParameters
     }
 
     /**
+     * @param array $permissions
+     *
+     * @return $this
+     */
+    public function setPermissions(array $permissions)
+    {
+        $this->permissions = $permissions;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getCaPath()
@@ -114,6 +131,14 @@ class RequestCertParameters
     public function getDefaultLoginUser()
     {
         return $this->defaultLoginUser;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 
 }

@@ -46,7 +46,7 @@ class RequestCert extends BaseHandler
 
          */
 
-        $allowedPermissions = ['permit-pty', '"force-command=df"'];
+        $allowedPermissions = $requestCertParameters->getPermissions();
 
         $permissions = '';
         foreach ($allowedPermissions as $permission) {

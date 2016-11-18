@@ -23,6 +23,10 @@ $route->post('/request-cert', function (ServerRequestInterface $request, Respons
         $parameters->setDefaultLoginUser($config['default_login_user']);
     }
 
+    if (!empty($config['permissions'])) {
+        $parameters->setPermissions($config['permissions']);
+    }
+
     $handler->handle($parameters);
 
 });
