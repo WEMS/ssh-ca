@@ -51,7 +51,7 @@ class RequestCert extends BaseHandler
             return $this->response;
         }
 
-        $this->logNotice('Created a cert for user ' . $this->getLoginAsUser());
+        $this->recordCertificateSigningDetails();
 
         $this->response->getBody()->write($this->getSignedCertificate());
 
@@ -85,6 +85,7 @@ class RequestCert extends BaseHandler
         $command .= ' -I "' . $this->parameters->getCertificateIdentity() . '"';
         $command .= ' -O clear ' . $this->getPermissionsString();
         $command .= ' -n ' . $this->getLoginAsUser();
+        $command .= ' -z "' . $this->uniqueReference . '"';
         $command .= ' ' . $this->inputPublicKeyPath . ' 2>&1';
 
         return $command;
@@ -144,6 +145,19 @@ class RequestCert extends BaseHandler
         $output = trim(file_get_contents($this->outputSignedCertPath)) . PHP_EOL;
 
         return $output;
+    }
+
+    /**
+     * @todo stick this in a sqlite database
+     */
+    private function recordCertificateSigningDetails()
+    {
+        $this->logNotice('Created a cert', [
+            'public-key' => trim(file_get_contents($this->inputPublicKeyPath)),
+            'login-as' => $this->getLoginAsUser(),
+            'serial-number' => $this->uniqueReference,
+            'parameters' => $this->parameters->toArray(),
+        ]);
     }
 
 }

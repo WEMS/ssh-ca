@@ -182,4 +182,16 @@ class RequestCertParameters
         return $this->certificateIdentity;
     }
 
+    public function toArray()
+    {
+        return [
+            'ca-path' => $this->getCaPath(),
+            'default-expiry' => $this->getDefaultExpiry(),
+            'default-login-user' => $this->getDefaultLoginUser(),
+            'tmp-dir' => $this->getTmpDir(),
+            'permissions' => $this->getPermissions(),
+            'certificate-identity' => $this->getCertificateIdentity(),
+        ];
+    }
+
 }

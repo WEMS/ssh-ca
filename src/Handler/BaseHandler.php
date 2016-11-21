@@ -32,23 +32,26 @@ abstract class BaseHandler
         $this->response = $response;
         $this->logger = $logger;
 
-        $this->uniqueReference = uniqid();
+        // uniqid gives a unique ref and crc32 ensures it's numeric so we can use it as a serial number in the cert
+        $this->uniqueReference = crc32(uniqid());
     }
 
     /**
      * @param string $message
+     * @param array $context
      */
-    protected function logNotice($message)
+    protected function logNotice($message, array $context = [])
     {
-        $this->logger->notice('Ref [' . $this->uniqueReference . ']. ' . $message);
+        $this->logger->notice('Ref [' . $this->uniqueReference . ']. ' . $message, $context);
     }
 
     /**
      * @param string $message
+     * @param array $context
      */
-    protected function logError($message)
+    protected function logError($message, array $context = [])
     {
-        $this->logger->error('Ref [' . $this->uniqueReference . ']. ' . $message);
+        $this->logger->error('Ref [' . $this->uniqueReference . ']. ' . $message, $context);
     }
 
 }
