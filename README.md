@@ -19,9 +19,19 @@ POST with CURL:
  curl -F "user=wems" -F "key=@/home/ben/.ssh/id_rsa.pub" http://localhost:8002/request-cert
 ```
 
-## Expiry Times
+## Configuration
 
-Expiry times are set in the conifg. From the ssh-keygen manual:
+The configuration is done by a YAML file at `config.config.yml`. A sample configuration is present under `config/config.sample.yml`.
+
+The only required configuration option is the `ca_path`.
+
+### Expiry Times
+
+Expiry times are set with the config option `default_expiry`. It's named `default_expiry` and not just `expiry` as the 
+intention is to allow a user to optionally request an expiry time of their own, subject to some checks. For example, we
+may allow users with a particular ldap group membership to request a month's certificate.
+
+From the ssh-keygen manual:
 
 > Specify a validity interval when signing a certificate.  A validity interval may consist of a single time, indicating that the certificate is valid beginning now and expiring at that time,
  or may consist of two times separated by a colon to indicate an explicit time interval.  The start time may be specified as a date in YYYYMMDD format, a time in YYYYMMDDHHMMSS format or a
