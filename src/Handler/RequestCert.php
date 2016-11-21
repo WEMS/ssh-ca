@@ -15,9 +15,6 @@ class RequestCert extends BaseHandler
     private $parameters;
 
     /** @var string */
-    private $uniqueRef;
-
-    /** @var string */
     private $inputPublicKeyPath;
 
     /** @var string */
@@ -45,8 +42,8 @@ class RequestCert extends BaseHandler
         $stdOut = $this->runCommand($command);
 
         if (!file_exists($this->outputSignedCertPath)) {
-            $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. STDOUT: ' . $stdOut);
-            $this->logger->error('Error. Ref [' . $this->uniqueRef . ']. Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
+            $this->logError('Couldn\'t write a cert. STDOUT: ' . $stdOut);
+            $this->logError('Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
 
             $this->response = $this->response->withStatus(500);
             $this->response->getBody()->write('Something went wrong creating the cert');
@@ -54,7 +51,7 @@ class RequestCert extends BaseHandler
             return $this->response;
         }
 
-        $this->logger->notice('Ref [' . $this->uniqueRef . ']. Created a cert for user ' . $this->getLoginAsUser());
+        $this->logNotice('Created a cert for user ' . $this->getLoginAsUser());
 
         $this->response->getBody()->write($this->getSignedCertificate());
 
@@ -65,11 +62,8 @@ class RequestCert extends BaseHandler
 
     private function setupPaths()
     {
-        // a unique ref for this transaction
-        $this->uniqueRef = uniqid();
-
-        $this->inputPublicKeyPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueRef . '.pub';
-        $this->outputSignedCertPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueRef . '-cert.pub';
+        $this->inputPublicKeyPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueReference . '.pub';
+        $this->outputSignedCertPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueReference . '-cert.pub';
     }
 
     /**

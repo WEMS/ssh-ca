@@ -18,6 +18,9 @@ abstract class BaseHandler
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var string */
+    protected $uniqueReference;
+
     /**
      * @param Request         $request
      * @param Response        $response
@@ -28,6 +31,24 @@ abstract class BaseHandler
         $this->request = $request;
         $this->response = $response;
         $this->logger = $logger;
+
+        $this->uniqueReference = uniqid();
+    }
+
+    /**
+     * @param string $message
+     */
+    protected function logNotice($message)
+    {
+        $this->logger->notice('Ref [' . $this->uniqueReference . ']. ' . $message);
+    }
+
+    /**
+     * @param string $message
+     */
+    protected function logError($message)
+    {
+        $this->logger->error('Ref [' . $this->uniqueReference . ']. ' . $message);
     }
 
 }
