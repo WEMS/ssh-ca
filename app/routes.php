@@ -2,10 +2,12 @@
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 
 $route->post('/request-cert', function (ServerRequestInterface $request, ResponseInterface $response) use ($container) {
 
     $handler = new \WemsCA\Handler\RequestCert($request, $response, $container->get('logger'));
+    $handler->setDetailRecorder($container->get(DetailRecorderContract::class));
 
     $config = $container->get('config');
 

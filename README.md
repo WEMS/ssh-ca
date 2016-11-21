@@ -10,7 +10,7 @@ Spin it up and POST requests to it.
 Example using the PHP built in server:
 
 ```
-php -S 0.0.0.0:8002
+php -S 0.0.0.0:8002 -t public
 ```
 
 POST with CURL:

@@ -2,6 +2,8 @@
 
 namespace WemsCA\Handler;
 
+use WemsCA\RequestCert\RecordDetails\CertificateSigningDetails;
+use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 use WemsCA\RequestCert\RequestCertParameters;
 use Zend\Diactoros\UploadedFile;
 
@@ -19,6 +21,21 @@ class RequestCert extends BaseHandler
 
     /** @var string */
     private $outputSignedCertPath;
+
+    /** @var DetailRecorderContract */
+    private $detailRecorder;
+
+    /**
+     * @param DetailRecorderContract $detailRecorder
+     *
+     * @return $this
+     */
+    public function setDetailRecorder($detailRecorder)
+    {
+        $this->detailRecorder = $detailRecorder;
+
+        return $this;
+    }
 
     public function handle(RequestCertParameters $requestCertParameters)
     {
@@ -147,17 +164,20 @@ class RequestCert extends BaseHandler
         return $output;
     }
 
-    /**
-     * @todo stick this in a sqlite database
-     */
     private function recordCertificateSigningDetails()
     {
-        $this->logNotice('Created a cert', [
-            'public-key' => trim(file_get_contents($this->inputPublicKeyPath)),
-            'login-as' => $this->getLoginAsUser(),
-            'serial-number' => $this->uniqueReference,
-            'parameters' => $this->parameters->toArray(),
-        ]);
+        $certificateSigningDetails = new CertificateSigningDetails();
+
+        $certificateSigningDetails
+            ->setSerialNumber($this->uniqueReference)
+            ->setPublicKey(trim(file_get_contents($this->inputPublicKeyPath)))
+            ->setLoginAsUser($this->getLoginAsUser())
+            ->setRequestCertParameters($this->parameters)
+            ->setTimestamp(time());
+
+        $this->detailRecorder->recordCertificateSigningDetails($certificateSigningDetails);
+
+        $this->logNotice('Created a cert', ['serial-number' => $certificateSigningDetails->getSerialNumber()]);
     }
 
 }

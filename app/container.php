@@ -1,5 +1,8 @@
 <?php
 
+use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
+use WemsCA\RequestCert\RecordDetails\SqliteDetailRecorder;
+
 $config = file_get_contents(__DIR__ . '/../config/config.yml');
 $parsedConfig = Symfony\Component\Yaml\Yaml::parse($config);
 
@@ -27,3 +30,11 @@ $log->pushHandler(
 );
 
 $container->share('logger', $log);
+
+$dbh = new PDO('sqlite:' . __DIR__ . '/../db/ca-signer.db');
+// @todo separate the init from the run
+$dbh->query(file_get_contents(__DIR__ . '/../db/schema.sql'));
+$container->share('db', $dbh);
+
+$sqliteDetailRecorder = new SqliteDetailRecorder($container->get('db'));
+$container->share(DetailRecorderContract::class, $sqliteDetailRecorder);
