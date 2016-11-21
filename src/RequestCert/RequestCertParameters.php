@@ -30,6 +30,7 @@ class RequestCertParameters
 
     /**
      * @param string $caPath
+     * @throws InvalidConfigurationException
      */
     public function __construct($caPath)
     {
@@ -38,6 +39,18 @@ class RequestCertParameters
         $this->setDefaultLoginUser(self::DEFAULT_LOGIN_USER);
         $this->setDefaultExpiry(self::DEFAULT_EXPIRY);
         $this->setPermissions([self::BASE_PERMISSION]);
+
+        $this->validate();
+    }
+
+    /**
+     * @throws InvalidConfigurationException
+     */
+    private function validate()
+    {
+        if (!file_exists($this->caPath)) {
+            throw new InvalidConfigurationException('No CA exists at path "' . $this->caPath . '"');
+        }
     }
 
     /**

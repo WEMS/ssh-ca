@@ -9,6 +9,11 @@ $route->post('/request-cert', function (ServerRequestInterface $request, Respons
 
     $config = $container->get('config');
 
+    // we require a CA path so let's check for that before we go any further
+    if (!isset($config['ca_path'])) {
+        throw new \WemsCA\RequestCert\InvalidConfigurationException('The config MUST have a ca_path defined');
+    }
+
     $parameters = new \WemsCA\RequestCert\RequestCertParameters($config['ca_path']);
 
     if (!empty($config['tmp_dir'])) {
