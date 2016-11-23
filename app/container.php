@@ -19,22 +19,30 @@ $container->share('emitter', Zend\Diactoros\Response\SapiEmitter::class);
 
 $container->share('config', $parsedConfig);
 
-$logLevel = isset($parsedConfig['log_level']) ? $parsedConfig['log_level'] : \Psr\Log\LogLevel::NOTICE;
+$container->add('logger', function () use ($container) {
 
-$log = new \Monolog\Logger('ca_signer');
-$log->pushHandler(
-    new \Monolog\Handler\StreamHandler(
-        __DIR__ . '/../log/ca_signer.log',
-        \Monolog\Logger::toMonologLevel($logLevel)
-    )
-);
+    $config = $container->get('config');
 
-$container->share('logger', $log);
+    $logLevel = isset($config['log_level']) ? $config['log_level'] : \Psr\Log\LogLevel::NOTICE;
 
-$dbh = new PDO('sqlite:' . __DIR__ . '/../db/ca-signer.db');
-// @todo separate the init from the run
-$dbh->query(file_get_contents(__DIR__ . '/../db/schema.sql'));
-$container->share('db', $dbh);
+    $log = new \Monolog\Logger('ca_signer');
+    $log->pushHandler(
+        new \Monolog\Handler\StreamHandler(
+            __DIR__ . '/../log/ca_signer.log',
+            \Monolog\Logger::toMonologLevel($logLevel)
+        )
+    );
 
-$sqliteDetailRecorder = new SqliteDetailRecorder($container->get('db'));
-$container->share(DetailRecorderContract::class, $sqliteDetailRecorder);
+    return $log;
+});
+
+$container->add('db', '\PDO')->withArgument('sqlite:' . __DIR__ . '/../db/ca-signer.db');
+
+$container
+    ->add(DetailRecorderContract::class, SqliteDetailRecorder::class)
+    ->withArgument('db');
+
+$container
+    ->add(\WemsCA\Command\DatabaseCommand::class)
+    ->withMethodCall('setDb', ['db'])
+    ->withMethodCall('setDatabasePath', [__DIR__ . '/../db/schema.sql']);
