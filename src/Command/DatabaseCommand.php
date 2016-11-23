@@ -51,7 +51,12 @@ class DatabaseCommand extends Command
 
     private function initialiseDatabaseSchema()
     {
+        if (!file_exists($this->databasePath)) {
+            throw new \InvalidArgumentException('Cannot read database schema at ' . $this->databasePath);
+        }
+
         $databaseSchema = file_get_contents($this->databasePath);
+
         $this->dbh->query($databaseSchema);
     }
 }
