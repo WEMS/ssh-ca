@@ -2,10 +2,10 @@
 
 namespace WemsCA\Handler;
 
+use WemsCA\RequestCert\Files;
 use WemsCA\RequestCert\RecordDetails\CertificateSigningDetails;
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 use WemsCA\RequestCert\RequestCertParameters;
-use Zend\Diactoros\UploadedFile;
 
 class RequestCert extends BaseHandler
 {
@@ -16,14 +16,11 @@ class RequestCert extends BaseHandler
     /** @var RequestCertParameters */
     private $parameters;
 
-    /** @var string */
-    private $inputPublicKeyPath;
-
-    /** @var string */
-    private $outputSignedCertPath;
-
     /** @var DetailRecorderContract */
     private $detailRecorder;
+
+    /** @var Files */
+    private $fileHandler;
 
     /**
      * @param DetailRecorderContract $detailRecorder
@@ -41,7 +38,7 @@ class RequestCert extends BaseHandler
     {
         $this->parameters = $requestCertParameters;
 
-        $this->setupPaths();
+        $this->fileHandler = new Files($this->uniqueReference, $this->parameters->getTmpDir());
 
         $uploadedFiles = $this->request->getUploadedFiles();
 
@@ -52,13 +49,13 @@ class RequestCert extends BaseHandler
             return $this->response;
         }
 
-        $this->storeTemporaryInputPublicKeyFile($uploadedFiles[self::POST_PARAM_FILE_KEY]);
+        $this->fileHandler->storeTemporaryInputPublicKeyFile($uploadedFiles[self::POST_PARAM_FILE_KEY]);
 
         $command = $this->getCommand();
 
         $stdOut = $this->runCommand($command);
 
-        if (!file_exists($this->outputSignedCertPath)) {
+        if (!$this->fileHandler->signedCertExists()) {
             $this->logError('Couldn\'t write a cert. STDOUT: ' . $stdOut);
             $this->logError('Couldn\'t write a cert. Command: ' . PHP_EOL . $command);
 
@@ -72,23 +69,9 @@ class RequestCert extends BaseHandler
 
         $this->response->getBody()->write($this->getSignedCertificate());
 
-        $this->removeTemporaryArtifacts();
+        $this->fileHandler->removeTemporaryArtifacts();
 
         return $this->response;
-    }
-
-    private function setupPaths()
-    {
-        $this->inputPublicKeyPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueReference . '.pub';
-        $this->outputSignedCertPath = $this->parameters->getTmpDir() . '/ssh_id_' . $this->uniqueReference . '-cert.pub';
-    }
-
-    /**
-     * @param UploadedFile $inputKeyFile
-     */
-    private function storeTemporaryInputPublicKeyFile($inputKeyFile)
-    {
-        $inputKeyFile->moveTo($this->inputPublicKeyPath);
     }
 
     /**
@@ -103,7 +86,7 @@ class RequestCert extends BaseHandler
         $command .= ' -O clear ' . $this->getPermissionsString();
         $command .= ' -n ' . $this->getLoginAsUser();
         $command .= ' -z "' . $this->uniqueReference . '"';
-        $command .= ' ' . $this->inputPublicKeyPath . ' 2>&1';
+        $command .= ' ' . $this->fileHandler->getInputPublicKeyPath() . ' 2>&1';
 
         return $command;
     }
@@ -147,21 +130,12 @@ class RequestCert extends BaseHandler
         return $stdOut;
     }
 
-    private function removeTemporaryArtifacts()
-    {
-        foreach ([$this->inputPublicKeyPath, $this->outputSignedCertPath] as $removeThisFile) {
-            unlink($removeThisFile);
-        }
-    }
-
     /**
      * @return string
      */
     private function getSignedCertificate()
     {
-        $output = trim(file_get_contents($this->outputSignedCertPath)) . PHP_EOL;
-
-        return $output;
+        return $this->fileHandler->getSignedCertificate();
     }
 
     private function recordCertificateSigningDetails()
@@ -170,7 +144,7 @@ class RequestCert extends BaseHandler
 
         $certificateSigningDetails
             ->setSerialNumber($this->uniqueReference)
-            ->setPublicKey(trim(file_get_contents($this->inputPublicKeyPath)))
+            ->setPublicKey($this->fileHandler->getPublicKeyContents($withTrailingNewLine = false))
             ->setLoginAsUser($this->getLoginAsUser())
             ->setRequestCertParameters($this->parameters)
             ->setTimestamp(time());
