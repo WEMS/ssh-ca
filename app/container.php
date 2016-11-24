@@ -1,7 +1,7 @@
 <?php
 
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
-use WemsCA\RequestCert\RecordDetails\SqliteDetailRecorder;
+use WemsCA\RequestCert\RecordDetails\PDODatabaseDetailRecorder;
 
 $config = file_get_contents(__DIR__ . '/../config/config.yml');
 $parsedConfig = Symfony\Component\Yaml\Yaml::parse($config);
@@ -39,7 +39,7 @@ $container->add('logger', function () use ($container) {
 $container->add('db', '\PDO')->withArgument('sqlite:' . __DIR__ . '/../db/ca-signer.db');
 
 $container
-    ->add(DetailRecorderContract::class, SqliteDetailRecorder::class)
+    ->add(DetailRecorderContract::class, PDODatabaseDetailRecorder::class)
     ->withArgument('db');
 
 $container

@@ -2,7 +2,7 @@
 
 namespace WemsCA\RequestCert\RecordDetails;
 
-class SqliteDetailRecorder implements DetailRecorderContract
+class PDODatabaseDetailRecorder implements DetailRecorderContract
 {
 
     /** @var \PDO */
@@ -18,7 +18,8 @@ class SqliteDetailRecorder implements DetailRecorderContract
 
     public function recordCertificateSigningDetails(CertificateSigningDetails $certificateSigningDetails)
     {
-        $stmt = $this->dbh->prepare('INSERT INTO `certs` VALUES (:serialNumber, :publicKey, :loginAs, :parameters, :createdAt)');
+        $tableName = $this->dbh->quote('certs');
+        $stmt = $this->dbh->prepare('INSERT INTO ' . $tableName . ' VALUES (:serialNumber, :publicKey, :loginAs, :parameters, :createdAt)');
 
         $stmt->bindValue(':serialNumber', $certificateSigningDetails->getSerialNumber());
         $stmt->bindValue(':publicKey', $certificateSigningDetails->getPublicKey());
