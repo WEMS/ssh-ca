@@ -1,21 +1,16 @@
 <?php
 
+use League\Container\Container;
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 use WemsCA\RequestCert\RecordDetails\PDODatabaseDetailRecorder;
 
 $config = file_get_contents(__DIR__ . '/../config/config.yml');
 $parsedConfig = Symfony\Component\Yaml\Yaml::parse($config);
 
-$container = new League\Container\Container;
+$container = new Container;
 
-$container->share('response', Zend\Diactoros\Response::class);
-$container->share('request', function () {
-    return Zend\Diactoros\ServerRequestFactory::fromGlobals(
-        $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
-    );
-});
-
-$container->share('emitter', Zend\Diactoros\Response\SapiEmitter::class);
+// doesn't seem to be needed - left commented out for now
+//$container->share(Zend\Expressive\Router\RouterInterface::class, \Zend\Expressive\Router\FastRouteRouter::class);
 
 $container->share('config', $parsedConfig);
 

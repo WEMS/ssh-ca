@@ -1,6 +1,6 @@
 {
     "name": "wems/ca-signer",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "type": "project",
     "authors": [
         {
@@ -9,17 +9,21 @@
         }
     ],
     "require": {
-        "league/route": "^2.0",
-        "zendframework/zend-diactoros": "^1.3",
         "symfony/yaml": "^3.1",
         "monolog/monolog": "^1.21",
         "symfony/console": "^3.1",
         "oscarotero/psr7-middlewares": "^3.18",
-        "m6web/firewall": "^1.0"
+        "m6web/firewall": "^1.0",
+        "zendframework/zend-expressive": "^1.0",
+        "zendframework/zend-expressive-fastroute": "^1.2",
+        "league/container": "^2.2"
     },
     "autoload": {
         "psr-4": {
             "WemsCA\\": "src"
         }
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:8002 -t public/"
     }
 }

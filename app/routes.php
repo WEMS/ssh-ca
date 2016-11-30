@@ -2,4 +2,5 @@
 
 use WemsCA\Controller;
 
-$route->post('/request-cert', [new Controller\RequestCertController($container), 'requestCert']);
+/** @var \Zend\Expressive\Application $app */
+$app->post('/request-cert', [new Controller\RequestCertController($container), 'requestCert']);
