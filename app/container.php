@@ -41,3 +41,21 @@ $container
     ->add(\WemsCA\Command\DatabaseCommand::class)
     ->withMethodCall('setDb', ['db'])
     ->withMethodCall('setDatabasePath', [__DIR__ . '/../db/schema.sql']);
+
+// ip address filtering
+$ipBlacklist = isset($parsedConfig['blacklist_ips']) ? $parsedConfig['blacklist_ips'] : [];
+
+$ipWhitelist = [];
+
+if (isset($parsedConfig['request_whitelist_ips'])) {
+    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['request_whitelist_ips']);
+}
+
+if (isset($parsedConfig['ssh_whitelist_ips'])) {
+    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['ssh_whitelist_ips']);
+}
+
+$container
+    ->add(\Psr7Middlewares\Middleware\Firewall::class)
+    ->withMethodCall('trusted', [$ipWhitelist])
+    ->withMethodCall('untrusted', [$ipBlacklist]);
