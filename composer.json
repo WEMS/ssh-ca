@@ -16,7 +16,8 @@
         "m6web/firewall": "^1.0",
         "zendframework/zend-expressive": "^1.0",
         "zendframework/zend-expressive-fastroute": "^1.2",
-        "league/container": "^2.2"
+        "league/container": "^2.2",
+        "filp/whoops": "^2.1"
     },
     "autoload": {
         "psr-4": {
