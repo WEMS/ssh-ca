@@ -28,6 +28,9 @@ class RequestCertParameters
     /** @var string */
     private $certificateIdentity;
 
+    /** @var array */
+    private $allowedIpAddresses = [];
+
     /**
      * @param string $caPath
      * @throws InvalidConfigurationException
@@ -135,6 +138,18 @@ class RequestCertParameters
     }
 
     /**
+     * @param array $allowedIpAddresses
+     *
+     * @return $this
+     */
+    public function setAllowedIpAddresses(array $allowedIpAddresses)
+    {
+        $this->allowedIpAddresses = $allowedIpAddresses;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getCaPath()
@@ -182,6 +197,14 @@ class RequestCertParameters
         return $this->certificateIdentity;
     }
 
+    /**
+     * @return array
+     */
+    public function getAllowedIpAddresses()
+    {
+        return $this->allowedIpAddresses;
+    }
+
     public function toArray()
     {
         return [
@@ -190,6 +213,7 @@ class RequestCertParameters
             'default-login-user' => $this->getDefaultLoginUser(),
             'tmp-dir' => $this->getTmpDir(),
             'permissions' => $this->getPermissions(),
+            'allowed-ip-addresses' => $this->getAllowedIpAddresses(),
             'certificate-identity' => $this->getCertificateIdentity(),
         ];
     }

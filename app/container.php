@@ -7,6 +7,23 @@ use WemsCA\RequestCert\RecordDetails\PDODatabaseDetailRecorder;
 $config = file_get_contents(__DIR__ . '/../config/config.yml');
 $parsedConfig = Symfony\Component\Yaml\Yaml::parse($config);
 
+// setup the IP address white and blacklists from the config
+$ipBlacklist = isset($parsedConfig['blacklist_ips']) ? $parsedConfig['blacklist_ips'] : [];
+
+$ipWhitelist = [];
+
+if (isset($parsedConfig['request_whitelist_ips'])) {
+    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['request_whitelist_ips']);
+}
+
+if (isset($parsedConfig['ssh_whitelist_ips'])) {
+    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['ssh_whitelist_ips']);
+}
+
+$parsedConfig['ip_whitelist'] = $ipWhitelist;
+$parsedConfig['ip_blacklist'] = $ipBlacklist;
+
+
 $container = new Container;
 
 // doesn't seem to be needed - left commented out for now
@@ -43,17 +60,6 @@ $container
     ->withMethodCall('setDatabasePath', [__DIR__ . '/../db/schema.sql']);
 
 // ip address filtering
-$ipBlacklist = isset($parsedConfig['blacklist_ips']) ? $parsedConfig['blacklist_ips'] : [];
-
-$ipWhitelist = [];
-
-if (isset($parsedConfig['request_whitelist_ips'])) {
-    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['request_whitelist_ips']);
-}
-
-if (isset($parsedConfig['ssh_whitelist_ips'])) {
-    $ipWhitelist = array_merge($ipWhitelist, $parsedConfig['ssh_whitelist_ips']);
-}
 
 $container
     ->add(\Psr7Middlewares\Middleware\Firewall::class)

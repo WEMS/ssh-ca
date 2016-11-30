@@ -55,6 +55,10 @@ class RequestCertController
             $parameters->setCertificateIdentity($config['certificate_identity']);
         }
 
+        if (!empty($config['ip_whitelist'])) {
+            $parameters->setAllowedIpAddresses($config['ip_whitelist']);
+        }
+
         $handler->handle($parameters);
     }
 

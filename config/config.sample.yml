@@ -5,6 +5,7 @@ ca_path: /path/to/ca
 tmp_dir: /tmp
 default_expiry: 1h
 default_login_user: wems
+# a "clear" option is always included
 permissions:
   - "permit-pty"
 #  - "force-command=df"
@@ -22,7 +23,7 @@ request_whitelist_ips:
 
 # IPs that are allowed to login to systems with the signed certs
 # By default, it will allow the request_whitelist_ips
-ssh_whitelist_ips:
+# ssh_whitelist_ips:
 #  -
 
 # IPs that cannot do anything

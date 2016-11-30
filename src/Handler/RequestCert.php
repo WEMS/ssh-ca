@@ -113,6 +113,13 @@ class RequestCert extends BaseHandler
             $permissions .= ' -O "' . $permission . '"';
         }
 
+        $allowedIpAddresses = $this->parameters->getAllowedIpAddresses();
+
+        if (!empty($allowedIpAddresses)) {
+            $commaSeparatedAllowedIps = implode(',', $allowedIpAddresses);
+            $permissions .= ' -O "source-address=' . $commaSeparatedAllowedIps . '"';
+        }
+
         return $permissions;
     }
 
