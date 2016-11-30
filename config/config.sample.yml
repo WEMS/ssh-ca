@@ -12,3 +12,18 @@ certificate_identity: signed by WEMS CA
 
 # psr-3 log levels (ala syslog)
 log_level: notice
+
+# IPs that are allowed to have requests signed
+request_whitelist_ips:
+  - 192.168.0.0/16
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 81.145.178.57/32
+
+# IPs that are allowed to login to systems with the signed certs
+# By default, it will allow the request_whitelist_ips
+ssh_whitelist_ips:
+#  -
+
+# IPs that cannot do anything
+# blacklist_ips:
