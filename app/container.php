@@ -1,8 +1,12 @@
 <?php
 
 use League\Container\Container;
+use Psr7Middlewares\Middleware\Firewall;
+use WemsCA\Command\DatabaseCommand;
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 use WemsCA\RequestCert\RecordDetails\PDODatabaseDetailRecorder;
+use Zend\Expressive\Router\FastRouteRouter;
+use Zend\Expressive\Router\RouterInterface;
 
 $config = file_get_contents(__DIR__ . '/../config/config.yml');
 $parsedConfig = Symfony\Component\Yaml\Yaml::parse($config);
@@ -26,7 +30,7 @@ $parsedConfig['ip_blacklist'] = $ipBlacklist;
 
 $container = new Container;
 
-$container->share(Zend\Expressive\Router\RouterInterface::class, \Zend\Expressive\Router\FastRouteRouter::class);
+$container->share(RouterInterface::class, FastRouteRouter::class);
 
 $container->share('config', $parsedConfig);
 
@@ -47,20 +51,20 @@ $container->add('logger', function () use ($container) {
     return $log;
 });
 
-$container->add('db', '\PDO')->withArgument('sqlite:' . __DIR__ . '/../db/ca-signer.db');
+$container->add('db', \PDO::class)->withArgument('sqlite:' . __DIR__ . '/../db/ca-signer.db');
 
 $container
     ->add(DetailRecorderContract::class, PDODatabaseDetailRecorder::class)
     ->withArgument('db');
 
 $container
-    ->add(\WemsCA\Command\DatabaseCommand::class)
+    ->add(DatabaseCommand::class)
     ->withMethodCall('setDb', ['db'])
     ->withMethodCall('setDatabasePath', [__DIR__ . '/../db/schema.sql']);
 
 // ip address filtering
 
 $container
-    ->add(\Psr7Middlewares\Middleware\Firewall::class)
+    ->add(Firewall::class)
     ->withMethodCall('trusted', [$ipWhitelist])
     ->withMethodCall('untrusted', [$ipBlacklist]);
