@@ -26,7 +26,6 @@ $parsedConfig['ip_blacklist'] = $ipBlacklist;
 
 $container = new Container;
 
-// doesn't seem to be needed - left commented out for now
 $container->share(Zend\Expressive\Router\RouterInterface::class, \Zend\Expressive\Router\FastRouteRouter::class);
 
 $container->share('config', $parsedConfig);
