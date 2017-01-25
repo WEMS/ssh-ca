@@ -3,6 +3,7 @@
 use League\Container\Container;
 use Psr7Middlewares\Middleware\Firewall;
 use WemsCA\Command\DatabaseCommand;
+use WemsCA\Controller;
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
 use WemsCA\RequestCert\RecordDetails\PDODatabaseDetailRecorder;
 use Zend\Expressive\Router\FastRouteRouter;
@@ -68,3 +69,10 @@ $container
     ->add(Firewall::class)
     ->withMethodCall('trusted', [$ipWhitelist])
     ->withMethodCall('untrusted', [$ipBlacklist]);
+
+// controllers
+$container
+    ->add(Controller\RequestCertController::class)
+    ->withArgument($container->get('config'))
+    ->withArgument($container->get(DetailRecorderContract::class))
+    ->withArgument($container->get('logger'));

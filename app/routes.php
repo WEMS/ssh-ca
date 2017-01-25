@@ -6,4 +6,4 @@ use WemsCA\Controller;
 
 $app->pipe('/request-cert', \Psr7Middlewares\Middleware\ClientIp::class);
 $app->pipe('/request-cert', $container->get(\Psr7Middlewares\Middleware\Firewall::class));
-$app->post('/request-cert', [new Controller\RequestCertController($container), 'requestCert']);
+$app->post('/request-cert', [$container->get(Controller\RequestCertController::class), 'requestCert']);

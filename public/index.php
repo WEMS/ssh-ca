@@ -3,6 +3,7 @@
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Run as Whoops;
 use Zend\Expressive\Application;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\WhoopsErrorHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -22,15 +23,14 @@ $whoops->pushHandler(function (Exception $exception, $inspector, $run) use ($con
 
 $finalHandler = new WhoopsErrorHandler($whoops);
 
-$app = new Application($container->get(Zend\Expressive\Router\RouterInterface::class), $container, $finalHandler);
+$app = new Application($container->get(RouterInterface::class), $container, $finalHandler);
 
 require __DIR__ . '/../app/routes.php';
 
 $app->pipeRoutingMiddleware();
 $app->pipeDispatchMiddleware();
 
-// Register Whoops just before running the application, as otherwise it can
-// swallow bootstrap errors.
+// Register Whoops just before running the application, as otherwise it can swallow bootstrap errors.
 $whoops->register();
 
 $app->run();
