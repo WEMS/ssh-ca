@@ -26,5 +26,9 @@
     },
     "scripts": {
         "serve": "php -S 0.0.0.0:8002 -t public/"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "squizlabs/php_codesniffer": "^2.7"
     }
 }

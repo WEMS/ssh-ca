@@ -130,5 +130,4 @@ class Files
 
         return $output;
     }
-
 }

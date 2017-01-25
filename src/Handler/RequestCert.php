@@ -44,7 +44,10 @@ class RequestCert extends BaseHandler
 
         if (empty($uploadedFiles[self::POST_PARAM_FILE_KEY])) {
             $this->response = $this->response->withStatus(400);
-            $this->response->getBody()->write('Missing uploaded file under "' . self::POST_PARAM_FILE_KEY . '"' . PHP_EOL);
+
+            $this->response->getBody()->write(
+                'Missing uploaded file under "' . self::POST_PARAM_FILE_KEY . '"' . PHP_EOL
+            );
 
             return $this->response;
         }
@@ -97,7 +100,10 @@ class RequestCert extends BaseHandler
     private function getLoginAsUser()
     {
         $parsedBody = $this->request->getParsedBody();
-        $loginAs = !empty($parsedBody[self::POST_PARAM_USER]) ? $parsedBody[self::POST_PARAM_USER] : $this->parameters->getDefaultLoginUser();
+
+        $loginAs = !empty($parsedBody[self::POST_PARAM_USER])
+                    ? $parsedBody[self::POST_PARAM_USER]
+                    : $this->parameters->getDefaultLoginUser();
 
         return $loginAs;
     }
@@ -160,5 +166,4 @@ class RequestCert extends BaseHandler
 
         $this->logNotice('Created a cert', ['serial-number' => $certificateSigningDetails->getSerialNumber()]);
     }
-
 }

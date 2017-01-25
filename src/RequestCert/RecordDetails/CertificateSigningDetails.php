@@ -121,5 +121,4 @@ class CertificateSigningDetails
 
         return $this;
     }
-
 }

@@ -53,5 +53,4 @@ abstract class BaseHandler
     {
         $this->logger->error('Ref [' . $this->uniqueReference . ']. ' . $message, $context);
     }
-
 }

@@ -6,5 +6,4 @@ interface DetailRecorderContract
 {
 
     public function recordCertificateSigningDetails(CertificateSigningDetails $certificateSigningDetails);
-
 }

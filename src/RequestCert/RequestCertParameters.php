@@ -217,5 +217,4 @@ class RequestCertParameters
             'certificate-identity' => $this->getCertificateIdentity(),
         ];
     }
-
 }

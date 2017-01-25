@@ -19,7 +19,10 @@ class PDODatabaseDetailRecorder implements DetailRecorderContract
     public function recordCertificateSigningDetails(CertificateSigningDetails $certificateSigningDetails)
     {
         $tableName = $this->dbh->quote('certs');
-        $stmt = $this->dbh->prepare('INSERT INTO ' . $tableName . ' VALUES (:serialNumber, :publicKey, :loginAs, :parameters, :createdAt)');
+
+        $stmt = $this->dbh->prepare(
+            'INSERT INTO ' . $tableName . ' VALUES (:serialNumber, :publicKey, :loginAs, :parameters, :createdAt)'
+        );
 
         $stmt->bindValue(':serialNumber', $certificateSigningDetails->getSerialNumber());
         $stmt->bindValue(':publicKey', $certificateSigningDetails->getPublicKey());
@@ -29,5 +32,4 @@ class PDODatabaseDetailRecorder implements DetailRecorderContract
 
         $stmt->execute();
     }
-
 }
