@@ -6,3 +6,12 @@ checks:
 tools:
     php_cs_fixer:
         config: { level: psr2 } 
+
+build:
+    tests:
+        override:
+            -
+                command: 'phpunit --coverage-clover=clover.xml'
+                coverage:
+                    file: 'clover.xml'
+                    format: 'clover'
