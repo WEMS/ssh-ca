@@ -1,5 +1,14 @@
 # CA Signer
 
+---
+
+[![Build Status](https://scrutinizer-ci.com/g/WEMS/ssh-ca/badges/build.png?b=master)](https://scrutinizer-ci.com/g/WEMS/ssh-ca/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/WEMS/ssh-ca/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/WEMS/ssh-ca/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/WEMS/ssh-ca/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/WEMS/ssh-ca/?branch=master)
+[![Code Climate](https://codeclimate.com/github/WEMS/ssh-ca/badges/gpa.svg)](https://codeclimate.com/github/WEMS/ssh-ca)
+
+---
+
 HTTP server for signing SSH keys. Receives a public key, returns a signed certificate that can then be used to SSH into
 systems that trust the CA.
 
