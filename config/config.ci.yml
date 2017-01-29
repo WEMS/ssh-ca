@@ -1,0 +1,20 @@
+---
+ca_path: ca_unsigned
+
+# optional
+tmp_dir: /tmp
+default_expiry: 1h
+default_login_user: wems
+permissions:
+  - "permit-pty"
+#  - "force-command=/mnt/bin/nvenv SMARTSERVER_IP"
+certificate_identity: signed by WEMS Test CA
+
+# psr-3 log levels (ala syslog)
+log_level: notice
+
+request_whitelist_ips:
+  - 192.168.0.0/16
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 127.0.0.1
