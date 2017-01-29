@@ -34,6 +34,11 @@ class RequestCert extends BaseHandler
         return $this;
     }
 
+    /**
+     * @param RequestCertParameters $requestCertParameters
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function handle(RequestCertParameters $requestCertParameters)
     {
         $this->parameters = $requestCertParameters;

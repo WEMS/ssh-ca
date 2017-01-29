@@ -16,11 +16,11 @@ class Files
     /** @var string */
     private $tmpDir;
 
-    /** @var string */
+    /** @var int */
     private $uniqueReference;
 
     /**
-     * @param string $uniqueReference
+     * @param int $uniqueReference
      * @param string $tmpDir
      */
     public function __construct($uniqueReference, $tmpDir = null)

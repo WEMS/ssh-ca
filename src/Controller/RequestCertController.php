@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use WemsCA\Handler\RequestCert;
 use WemsCA\RequestCert\InvalidConfigurationException;
 use WemsCA\RequestCert\RecordDetails\DetailRecorderContract;
-use WemsCA\RequestCert\RequestCertParameters;
+use WemsCA\RequestCert\RequestCertParametersFactory;
 
 class RequestCertController
 {
@@ -39,31 +39,7 @@ class RequestCertController
             throw new InvalidConfigurationException('The config MUST have a ca_path defined');
         }
 
-        $parameters = new RequestCertParameters($this->config['ca_path']);
-
-        if (!empty($this->config['tmp_dir'])) {
-            $parameters->setTmpDir($this->config['tmp_dir']);
-        }
-
-        if (!empty($this->config['default_expiry'])) {
-            $parameters->setDefaultExpiry($this->config['default_expiry']);
-        }
-
-        if (!empty($this->config['default_login_user'])) {
-            $parameters->setDefaultLoginUser($this->config['default_login_user']);
-        }
-
-        if (!empty($this->config['permissions'])) {
-            $parameters->setPermissions($this->config['permissions']);
-        }
-
-        if (!empty($this->config['certificate_identity'])) {
-            $parameters->setCertificateIdentity($this->config['certificate_identity']);
-        }
-
-        if (!empty($this->config['ip_whitelist'])) {
-            $parameters->setAllowedIpAddresses($this->config['ip_whitelist']);
-        }
+        $parameters = (new RequestCertParametersFactory($this->config))->getRequestCertParameters();
 
         $handler->handle($parameters);
     }

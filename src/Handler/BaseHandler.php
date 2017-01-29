@@ -18,7 +18,7 @@ abstract class BaseHandler
     /** @var LoggerInterface */
     protected $logger;
 
-    /** @var string */
+    /** @var int */
     protected $uniqueReference;
 
     /**
