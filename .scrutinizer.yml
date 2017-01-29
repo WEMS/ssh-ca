@@ -1,0 +1,8 @@
+checks:
+    php:
+        code_rating: true
+        duplication: true
+
+tools:
+    php_cs_fixer:
+        config: { level: psr2 } 
